@@ -15,7 +15,7 @@ Some details:
 
 Schuerch, M. and Azzimonti, D. and Benavoli A. and Zaffalon M.
 
-## References: 
+## Reference
 
 ```
 @paper{SABZ,
