@@ -7,6 +7,9 @@ Implements the "Stochastic Recursive Gaussian Process" (SRGP) Regression algorit
 
 We provide the code for SRGP and an example to demonstrate the usage.
 
+Some details:
+...
+
 
 ## Contributors
 
