@@ -8,6 +8,9 @@ from mix import diag_HtKH, dot3rl, dot3lr
 from IPython.display import clear_output
 
 
+# Manuel Schuerch, IDSIA/USI, 24.05.2019
+
+
 class REC:
 
     def __init__(self, X, Y, kernel, nEpochs, batchsize, params, params_OPT, \
@@ -88,24 +91,24 @@ class REC:
 
 
         # initialize all prior quantities
-        self.n = np.zeros(self.num_inducing)                # natural mean vector (num_output = 1!)
-        self.P = self.kern.K(Z)                                  # covariance matrix
+        self.n = np.zeros(self.num_inducing)                    # natural mean vector (num_output = 1!)
+        self.P = self.kern.K(Z)                                 # covariance matrix
         diag.add(self.P, self.const_jitter)
         L_P = jitchol(self.P)
-        self.C, _ = dpotri(L_P, lower=1)                    # precision matrix
-        self._log_marginal_likelihood = 0.0                 # log marginal likelihood
-        self._log_Det_C = -2*sum(np.log(np.diag(L_P)))      # log determinant of C
+        self.C, _ = dpotri(L_P, lower=1)                        # precision matrix
+        self._log_marginal_likelihood = 0.0                     # log marginal likelihood
+        self._log_Det_C = -2*sum(np.log(np.diag(L_P)))          # log determinant of C
 
         self.Krr = self.P
         self.iKrr = self.C
 
         # derivative quantities
-        J = self.num_inducing                               # number of inducing points
-        JD = self.num_inducing*self.kern.input_dim               # number of inducing points times dimension
+        J = self.num_inducing                                   # number of inducing points
+        JD = self.num_inducing*self.kern.input_dim              # number of inducing points times dimension
         if self.params_EST['R']:
             self.dn_dR = np.zeros((J,JD))                       # derivative of natural mean wrt inducing inputs (Rjd: R11,...,R1D, R21,...,RJD)
             self.dC_dR = np.zeros((J,J,JD))                     # derivative of precision matrix wrt inducing inputs (Rjd: R11,...,R1D, R21,...,RJD)
-            self.dψ_dR = np.zeros((J,self.kern.input_dim))           # gradients of inducing inputs
+            self.dψ_dR = np.zeros((J,self.kern.input_dim))      # gradients of inducing inputs
 
             dKrr_sparse = self.kern.dK_dX(Z)
             for j in range(0,self.num_inducing):
@@ -194,8 +197,6 @@ class REC:
 
                 self.update_params()
 
-
-
             self.storeHyp(i_ep)
             self.compute_stats(i_ep)
 
@@ -205,10 +206,6 @@ class REC:
             print('RMSE ',self.STATS[1,max(i_ep-1,0)],' negLogP ',self.STATS[2,max(i_ep-1,0)],' COV ',self.STATS[3,max(i_ep-1,0)])
 
             print('σ20: ',self.params['σ0']**2, ' ls: ',self.params['ls'] , ' σ2n: ',self.params['σn']**2 )
-
-
-
-
 
 
 
@@ -233,12 +230,12 @@ class REC:
         Z = self.params['R']
 
         # compute kernel quantities
-        Krr = self.kern.K(Z)                                 # kernel matrix of inducing inputs
-        diag.add(Krr, self.const_jitter)                     # add some jitter for stability reasons
-        Kxr = self.kern.K(X,Z)                               # kernel matrix between mini-batch and inducing inputs
-        kxx = self.kern.Kdiag(X)  #+const_jitter             # diagonal of kernel matrix auf mini-batch
-        L_K = jitchol(Krr)                              # lower cholesky matrix of kernel matrix
-        iKrr, _ = dpotri(L_K)                           # inverse of kernel matrix of inducinv inputs
+        Krr = self.kern.K(Z)                                # kernel matrix of inducing inputs
+        diag.add(Krr, self.const_jitter)                    # add some jitter for stability reasons
+        Kxr = self.kern.K(X,Z)                              # kernel matrix between mini-batch and inducing inputs
+        kxx = self.kern.Kdiag(X)  #+const_jitter            # diagonal of kernel matrix auf mini-batch
+        L_K = jitchol(Krr)                                  # lower cholesky matrix of kernel matrix
+        iKrr, _ = dpotri(L_K)                               # inverse of kernel matrix of inducinv inputs
 
         self.Krr = Krr
         self.iKrr = iKrr
@@ -299,14 +296,10 @@ class REC:
         # dL_d_dn = 2*σ_n2 *sum(dL_dv) -2*num_data*α_const # wrt to dn
         dL_d_dn = sum(dL_dv) - num_data*α_const/σ_n2   # wrt to σn2
 
-
-
         iVy = y/v
         dH = np.zeros((num_data, num_inducing))
 
-
-
-        scaleFact = 1 #self.nUpdates      ###########
+        scaleFact = 1 ###
 
 
         if self.params_EST['R']:
@@ -328,8 +321,6 @@ class REC:
                     ### dψ_dR[j,d] = dψ_dR[j,d] -0.5*( np.sum(dL_dkxx *dKxx_diag) +  dL_d_dn   )
 
                     delta = -0.5*( np.sum(dL_dKrr[:,j]*kjd) + np.sum(dL_dKrr[j,:]*kjd) + np.sum(dL_dKxr[:,j]*k2jd) + np.sum( dL_dn*dn_dR[:,jd]) + np.sum( dL_dC*dC_dR[:,:,jd]) )
-                    ############################!!!!!!!
-
                     dψ_dR[j,d] =   delta*scaleFact
 
                     dH = -np.outer( H[:,j], kjd)
@@ -341,10 +332,6 @@ class REC:
                     dn_dR[:,jd] = dn_dR[:,jd] + np.dot(dH.T,iVy )    + np.dot(Ht,div * y)
                     F_ = np.dot(A_,dH)
                     dC_dR[:,:,jd] = dC_dR[:,:,jd] + F_ + F_.T  + np.dot(Ht * div, H)
-
-
-
-
 
 
         # compute kernel derivatives wrt variance_0
@@ -374,8 +361,6 @@ class REC:
 
 
 
-
-
         # compute kernel derivatives wrt lengthsacle(s)
         dKrr_dl = self.kern.dK_dl(Z)
         dKxr_dl = self.kern.dK_dl(X,Z)
@@ -389,9 +374,6 @@ class REC:
             #############################
 
             dψ_dl[d] =   delta*scaleFact
-
-            # print('l stoch: ',- self.params['ls'][0]*4*0.5*( np.sum(dL_dKrr*dKrr_dl[:,:,d]) + np.sum(dL_dKxr*dKxr_dl[:,:,d]) + np.sum( dL_dn*dn_dl[:,d]) + np.sum( dL_dC*dC_dl[:,:,d]) ))
-
             dH = dKxr_dl[:,:,d] -np.dot( H, dKrr_dl[:,:,d])
             dH = np.dot(dH,iKrr)
 
