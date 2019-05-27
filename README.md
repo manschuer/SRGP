@@ -19,7 +19,7 @@ Schuerch, M. and Azzimonti, D. and Benavoli A. and Zaffalon M.
 
 ```
 @paper{SABZ,
-  title =  {Recursive {E}stimation for {S}parse {G}aussian {P}rocess {R}egression},
+  title =  {Recursive Estimation for Sparse Gaussian Process Regression},
   author =   {Schuerch, M. and Azzimonti, D. and Benavoli A. and Zaffalon M.},
   year =   {2019}
 }
