@@ -7,11 +7,8 @@ Implements the "Stochastic Recursive Gaussian Process" (SRGP) Regression algorit
 
 We provide the code for SRGP and an example to demonstrate the usage.
 The main code is in RECC.py and the example in the jupyter notebook example.ipynb.
-In order to run the algorithm, you need GPy[homepage](https://github.com/SheffieldML/GPy) since we use the implemented kernels from there.
-
-
-Some details:
-...
+In order to run the algorithm, you need [GPy](https://github.com/SheffieldML/GPy) since we use their kernels from there.
+At the moment, the implemented stationary kernels from GPy are compatible with our implementation and it could be easaly extended for instance to sum- and product kernels.
 
 
 ## Contributors
