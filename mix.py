@@ -132,11 +132,11 @@ def genData(Ntrain, Ntest=1000, D=1, lengthscale=0.2, sig2_noise=0.1, sig2_0=1.5
     k.variance = sig2_0
 
     # Xtrain = np.random.rand(Ntrain,D)*2.-1.
-    Xtrain1 = np.random.rand(int(Ntrain/2),D)*0.8-1.
-    Xtrain2 = np.random.rand(int(Ntrain/2),D)*0.8+0.2
+    Xtrain1 = np.random.rand(int(Ntrain/2),D)*0.9-1.
+    Xtrain2 = np.random.rand(int(Ntrain/2),D)*0.9+0.1
     Xtrain = np.vstack((Xtrain1,Xtrain2))
     # Xtrain = Xtrain[np.random.permutation(Ntrain),:]
-    Xtest = np.random.rand(Ntest,D)*2.4-1.2
+    Xtest = np.random.rand(Ntest,D)*2.2-1.1
     # Xtest = np.random.rand(Ntest,D)*2.-1.
     inds = np.argsort(Xtest[:,0])
     Xtest = Xtest[inds,:]
